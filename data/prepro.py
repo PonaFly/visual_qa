@@ -173,8 +173,8 @@ def get_unqiue_img(imgs):
         count_img[img['img_path']] = count_img.get(img['img_path'], 0) + 1
 
     unique_img = [w for w, n in count_img.items()]
-    # add one for torch, since torch start from 1.
-    imgtoi = {w: i+1 for i, w in enumerate(unique_img)}
+
+    imgtoi = {w: i for i, w in enumerate(unique_img)}
 
     for i, img in enumerate(imgs):
         img_pos[i] = imgtoi.get(img['img_path'])
@@ -192,8 +192,8 @@ def main(params):
 
     # get top answers
     top_ans = get_top_answers(imgs_train, params)
-    atoi = {w: i+1 for i, w in enumerate(top_ans)}
-    itoa = {i+1: w for i, w in enumerate(top_ans)}
+    atoi = {w: i for i, w in enumerate(top_ans)}
+    itoa = {i: w for i, w in enumerate(top_ans)}
 
     # filter question, which isn't in the top answers.
     imgs_train = filter_question(imgs_train, atoi)
