@@ -274,10 +274,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    # input json
-    parser.add_argument('--input_train_json', required=True,
+    # input json  
+    parser.add_argument('--input_train_json', default='vqa_raw_train.json',
                         help='input json file to process into hdf5')
-    parser.add_argument('--input_test_json', required=True,
+    parser.add_argument('--input_test_json', default='vqa_raw_test.json',
                         help='input json file to process into hdf5')
     parser.add_argument('--num_ans', required=True, type=int,
                         help='number of top answers for the final classifications.')
