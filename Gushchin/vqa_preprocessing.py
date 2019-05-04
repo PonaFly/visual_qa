@@ -1,4 +1,3 @@
-
 import json
 import os
 import argparse
@@ -64,7 +63,7 @@ def main(params):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(add_help=True)
     
     parser.add_argument('--download', action='store_true', default=False, help='Download and extract data from VQA server')
     parser.add_argument('--binary',action='store_true', default=False, help='for binary classification')

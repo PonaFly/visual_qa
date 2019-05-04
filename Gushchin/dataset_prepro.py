@@ -271,7 +271,7 @@ def main(params):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(add_help=True)
 
     # input json  
     parser.add_argument('--input_train_json', default='vqa_raw_train.json',
