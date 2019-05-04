@@ -17,10 +17,8 @@ import h5py
 from nltk.tokenize import word_tokenize
 import json
 import spacy
-spacy.load('en')
-
 import re
-
+spacy.load('en')
 
 def tokenize(sentence):
     return [i for i in re.split(r"([-.\"',:? !\$#@~()*&\^%;\[\]/\\\+<>\n=])", sentence) if i != '' and i != ' ' and i != '\n']
@@ -183,12 +181,13 @@ def get_unqiue_img(imgs):
 
 
 def main(params):
+    data_folder = 'data/'
     if params['token_method'] == 'spacy':
         print('loading spaCy tokenizer for NLP')
         params['spacy'] = spacy.en.English(data_dir=params['spacy_data'])
 
-    imgs_train = json.load(open(params['input_train_json'], 'r'))
-    imgs_test = json.load(open(params['input_test_json'], 'r'))
+    imgs_train = json.load(open(data_folder+params['input_train_json'], 'r'))
+    imgs_test = json.load(open(data_folder+params['input_test_json'], 'r'))
 
     # get top answers
     top_ans = get_top_answers(imgs_train, params)
@@ -234,7 +233,7 @@ def main(params):
 
     # create output h5 file for training set.
     N = len(imgs_train)
-    f = h5py.File(params['output_train_h5'], "w")
+    f = h5py.File(data_folder+params['output_train_h5'], "w")
     f.create_dataset("ques_train", dtype='uint32', data=ques_train)
     f.create_dataset("ques_length_train", dtype='uint8',
                      data=ques_length_train)
@@ -245,7 +244,7 @@ def main(params):
     f.close()
     print('wrote ', params['output_train_h5'])
     
-    f = h5py.File(params['output_test_h5'], "w")
+    f = h5py.File(data_folder+params['output_test_h5'], "w")
     f.create_dataset("ques_test", dtype='uint32', data=ques_test)
     f.create_dataset("ques_length_test", dtype='uint8', data=ques_length_test)
     f.create_dataset("question_id_test", dtype='uint32', data=question_id_test)
@@ -261,12 +260,12 @@ def main(params):
     out['ix_to_ans'] = itoa
     out['unique_img_train'] = unique_img_train
     
-    json.dump(out, open(params['output_train_json'], 'w'))
-    json.dump(vocab, open("vocab.json", 'w'))
+    json.dump(out, open(data_folder+params['output_train_json'], 'w'))
+    json.dump(vocab, open(data_folder+'vocab.json', 'w'))
     print('wrote ', params['output_train_json'])
     
     out = {'unique_img_test':unique_img_test}
-    json.dump(out, open(params['output_test_json'], 'w'))
+    json.dump(out, open(data_folder+params['output_test_json'], 'w'))
     print('wrote ', params['output_test_json'])
 
 
@@ -283,13 +282,13 @@ if __name__ == "__main__":
                         help='number of top answers for the final classifications.')
 
     parser.add_argument(
-        '--output_train_json', default='data_prepro_train.json', help='output json file')
+        '--output_train_json', default='data_prepro_train.json1', help='output json file')
     parser.add_argument(
-        '--output_train_h5', default='data_prepro_train.h5', help='output h5 file')
+        '--output_train_h5', default='data_prepro_train.h51', help='output h5 file')
     parser.add_argument(
-        '--output_test_json', default='data_prepro_test.json', help='output json file')
+        '--output_test_json', default='data_prepro_test.json1', help='output json file')
     parser.add_argument(
-        '--output_test_h5', default='data_prepro_test.h5', help='output h5 file')
+        '--output_test_h5', default='data_prepro_test.h51', help='output h5 file')
 
     # options
     parser.add_argument('--max_length', default=26, type=int,
