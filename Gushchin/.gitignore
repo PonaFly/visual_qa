@@ -1,6 +1,6 @@
 *h5
 *json
 *zip
-*jpg
+data/
 .ipynb_checkpoints/
-
+__pycache__/
