@@ -59,14 +59,14 @@ def datagen(data_train,batch_size):
         yield [np.array(imgs), ques], answers
 
         
-def old_model_construct(vocabulary_len,max_text_length,lr=1e-5,cnn='resnet'):  #vocabulary_len=12629, max_text_length=26
+def old_model_construct(vocabulary_len,max_text_length,lr,cnn):  #vocabulary_len=12629, max_text_length=26
  
     img_shape = (224,224,3)
     img_input = Input(img_shape, name='image_input')
     if cnn == 'resnet':
         cnn_base = ResNet50(weights='imagenet', input_tensor=img_input, include_top=False)     # 175 layers
         cnn_flatten = Flatten(name='cnn_flatten')(cnn_base.get_layer('activation_49').output)
-    else:
+    elif cnn == 'vgg':
         cnn_base = VGG19(weights='imagenet', input_tensor=img_input, include_top=False)
         cnn_flatten = Flatten(name='cnn_flatten')(cnn_base.get_layer('block5_pool').output)
     for l in cnn_base.layers:
@@ -93,26 +93,26 @@ def old_model_construct(vocabulary_len,max_text_length,lr=1e-5,cnn='resnet'):  #
     
     return model
 
-def new_model_construct(vocabulary_len,max_text_length,lr=1e-5,cnn='resnet'):  #kostil
+def new_model_construct(vocabulary_len,max_text_length,lr,cnn):  #kostil
  
     img_shape = (224,224,3)
     img_input = Input(img_shape, name='image_input')
     if cnn == 'resnet':
         cnn_base = ResNet50(weights='imagenet', input_tensor=img_input, include_top=False)     # 175 layers
         cnn_flatten = Flatten(name='cnn_flatten')(cnn_base.get_layer('activation_49').output)
-    else:
+    elif cnn == 'vgg':
         cnn_base = VGG19(weights='imagenet', input_tensor=img_input, include_top=False)
         cnn_flatten = Flatten(name='cnn_flatten')(cnn_base.get_layer('block5_pool').output)
     for l in cnn_base.layers:
-            l.trainable = True
+            l.trainable = False
     
-    EMBEDDING_DIM = 500
+    EMBEDDING_DIM = 20
     text_input = Input((max_text_length,))
     embed = Embedding(input_dim=vocabulary_len, output_dim=EMBEDDING_DIM, input_length=max_text_length)(text_input)
     drop_1 = Dropout(0.5)(embed)
-    lstm_1 = LSTM(1024, input_shape=(max_text_length, EMBEDDING_DIM),return_sequences=True)(drop_1)
+    lstm_1 = GRU(1024, input_shape=(max_text_length, EMBEDDING_DIM),return_sequences=True)(drop_1)
     drop_2 = Dropout(0.5)(lstm_1)
-    lstm_2 = LSTM(1024,return_sequences=True)(drop_2)
+    lstm_2 = GRU(1024,return_sequences=True)(drop_2)
     drop_3 = Dropout(0.5)(lstm_2)
     dense_1 = Dense(1024,activation='tanh')(drop_3)
     lstm_flatten = Flatten(name='gru_flatten')(dense_1)
@@ -151,6 +151,7 @@ def get_history_params(history,es_patience,*params):
         try:
             for param in params:
                 params_values[param] = str(round(history.history[param][-(i+1)],3))
+            params_values['epochs'] = i
             return params_values
         except:
             continue
@@ -161,7 +162,7 @@ def fit(model,data_train,epochs,batch_size,steps,es_patience):
     data_gen = datagen(data_train, batch_size)
     history = model.fit_generator(data_gen,steps_per_epoch=steps, 
         epochs=epochs, 
-        verbose=1,workers=3,use_multiprocessing=True,
+        verbose=1,workers=8,use_multiprocessing=True,max_queue_size=20,
         callbacks=[EarlyStopping(monitor='loss',patience=es_patience,restore_best_weights=True)],
     )
     return history

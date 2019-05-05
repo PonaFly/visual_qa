@@ -35,7 +35,7 @@ def main(params):
     print('constructing model...')
     if params.model_type == 1:
         model = Model.old_model_construct(len(vocabulary),data_train['ques_train'].shape[1],params.lr,params.cnn)
-    else:
+    elif params.model_type == 2:
         model = Model.new_model_construct(len(vocabulary),data_train['ques_train'].shape[1],params.lr,params.cnn)
     if params.steps == -1:
         steps = len(data_train['answers']) // BATCH_SIZE
@@ -49,6 +49,7 @@ def main(params):
     print('model saving')
     history_params = Model.get_history_params(history,es_patience,'loss','f1')
     model_name = model_name + '_loss:' + history_params['loss'] + ';f1:' + history_params['f1']
+    model_name = model_name + ';epochs:' + history_params['epochs']
     Model.save_model(model,history,model_name)
 
     
@@ -60,7 +61,7 @@ if __name__ == '__main__':
     parser.add_argument('--cnn', default='resnet', help='vgg19 or resnet50 as pretrained cnn')
     parser.add_argument('--epochs', default=100, type=int)
     parser.add_argument('--bs', default=50, type=int)
-    parser.add_argument('--es', default=2, type=int, help='EarlyStopping callback patience')
+    parser.add_argument('--es', default=1, type=int, help='EarlyStopping callback patience')
     parser.add_argument('--lr', default=1e-5, type=float, help='learning rate')
     parser.add_argument('--steps', default=-1, type=int, help='only for test')
     parser.add_argument('--model_type', default=1, type=int, help='check model.py')
