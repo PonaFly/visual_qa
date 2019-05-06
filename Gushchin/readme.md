@@ -17,4 +17,4 @@ In progress
 In progress
 
 
-##### some code for data preprocessing is taken from https://github.com/GT-Vision-Lab/VQA_LSTM_CNN
+##### some code for data preprocessing is taken from https://github.com/GT-Vision-Lab/VQA_LSTM_CNN and by pull req.  https://github.com/varunagrawal
