@@ -282,13 +282,13 @@ if __name__ == "__main__":
                         help='number of top answers for the final classifications.')
 
     parser.add_argument(
-        '--output_train_json', default='data_prepro_train.json1', help='output json file')
+        '--output_train_json', default='data_prepro_train.json', help='output json file')
     parser.add_argument(
-        '--output_train_h5', default='data_prepro_train.h51', help='output h5 file')
+        '--output_train_h5', default='data_prepro_train.h5', help='output h5 file')
     parser.add_argument(
-        '--output_test_json', default='data_prepro_test.json1', help='output json file')
+        '--output_test_json', default='data_prepro_test.json', help='output json file')
     parser.add_argument(
-        '--output_test_h5', default='data_prepro_test.h51', help='output h5 file')
+        '--output_test_h5', default='data_prepro_test.h5', help='output h5 file')
 
     # options
     parser.add_argument('--max_length', default=26, type=int,
