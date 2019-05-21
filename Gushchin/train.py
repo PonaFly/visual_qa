@@ -1,4 +1,4 @@
-#loss 8.0385 f1 0.6591 acc 0.4958 default params in Model
+
 import h5py
 import json
 import Model
