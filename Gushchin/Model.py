@@ -53,9 +53,8 @@ def datagen(data_train,batch_size):
         answers = data_copy['answers'][:batch_size]
         imgs = np.array(imgs) / 255
         
-        data_copy['ques_train'] = data_copy['ques_train'][batch_size:]
-        data_copy['answers'] = data_copy['answers'][batch_size:]
-        data_copy['img_link'] = data_copy['img_link'][batch_size:]
+        data_copy = data_copy.iloc[batch_size:]
+        
         yield [np.array(imgs), ques], answers
 
         
