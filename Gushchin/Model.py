@@ -161,7 +161,7 @@ def fit(model,data_train,epochs,batch_size,steps,es_patience):
     data_gen = datagen(data_train, batch_size)
     history = model.fit_generator(data_gen,steps_per_epoch=steps, 
         epochs=epochs, 
-        verbose=1,workers=8,use_multiprocessing=True,max_queue_size=20,
+        verbose=1,
         callbacks=[EarlyStopping(monitor='loss',patience=es_patience,restore_best_weights=True)],
     )
     return history
